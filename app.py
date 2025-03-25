@@ -56,52 +56,54 @@ def edit_image():
         image.save(image_path)  # Save the image
         """
         MODEL_ID = "gemini-2.0-flash-exp"
-
-        response = client.models.generate_content(
-            model=MODEL_ID,
-            contents=[
-                text,
-                PIL.Image.open(image)
-            ],
-            config=types.GenerateContentConfig(
-                response_modalities=['Text', 'Image'],
-                safety_settings=[
-            
-            
-            types.SafetySetting(
-                category=types.HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold=types.HarmBlockThreshold.BLOCK_NONE,
-            ),
-            types.SafetySetting(
-                category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold=types.HarmBlockThreshold.BLOCK_NONE,
-            ),
-            types.SafetySetting(
-                category=types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold=types.HarmBlockThreshold.BLOCK_NONE,
-            ),
-            types.SafetySetting(
-                category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold=types.HarmBlockThreshold.BLOCK_NONE,
-            ),
-            types.SafetySetting(
-                category=types.HarmCategory.HARM_CATEGORY_CIVIC_INTEGRITY,
-                threshold=types.HarmBlockThreshold.BLOCK_NONE,
-            ),
-            
-      ]
+        try:
+            response = client.models.generate_content(
+                model=MODEL_ID,
+                contents=[
+                    text,
+                    PIL.Image.open(image)
+                ],
+                config=types.GenerateContentConfig(
+                    response_modalities=['Text', 'Image'],
+                    safety_settings=[
+                
+                
+                types.SafetySetting(
+                    category=types.HarmCategory.HARM_CATEGORY_HARASSMENT,
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
+                ),
+                types.SafetySetting(
+                    category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
+                ),
+                types.SafetySetting(
+                    category=types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
+                ),
+                types.SafetySetting(
+                    category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
+                ),
+                types.SafetySetting(
+                    category=types.HarmCategory.HARM_CATEGORY_CIVIC_INTEGRITY,
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
+                ),
+                
+                ]
+                )
             )
-        )
-        display_response(response)
-        #save_image(response, 'static/newgen.png')
-        image_data=save_image(response)
-        encoded_image = base64.b64encode(image_data).decode('utf-8')
+            
+            #display_response(response)
+            #save_image(response, 'static/newgen.png')
+            image_data=save_image(response)
+            encoded_image = base64.b64encode(image_data).decode('utf-8')
+            
+            return jsonify({
+                "image_url": encoded_image
+            })
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
         
-        return jsonify({
-            "image_url": encoded_image
-        })
-        
-    return jsonify({"error": "No image uploaded"}), 400
 if __name__ == "__main__":
     
     app.run(debug=True)

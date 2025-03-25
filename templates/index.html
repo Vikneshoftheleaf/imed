@@ -8,14 +8,48 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class=" p-8 transition-colors duration-300">
+<body class="transition-colors duration-300">
 
+    <section class="p-8">
 
-    <div class="grid grid-cols-2 gap-2 ">
+    <header class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Image Generator</h1>
+        <a href="#discover" class="px-4 py-2 rounded-full bg-blue-500 text-white flex justify-center items-center gap-2">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass" viewBox="0 0 16 16">
+                    <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016m6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+                    <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
+                  </svg>
+            </span>
+            Discover
+        </a>
+    </header>
 
-        <div class="flex items-center justify-center w-full ">
+    <hr class="my-8 text-gray-300">
 
-                <img id="previewImage" class="h-[500px] aspect-square object-contain " style="display: none;" alt="Uploaded Image">
+    <div class="grid lg:grid-cols-2 grid-cols-1 gap-8 ">
+        <div class="w-full flex flex-col justify-center items-center ">
+            <h1 class="font-semibold text-xl">Result</h1>
+            <div id="resultHolder" style="display: flex;" class="mt-2 w-full h-full flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 ">
+                
+                <span class="text-gray-500 dark:text-gray-400 p-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
+                  </svg>
+                </span>
+                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">The image will be displayed here.</p>
+                <p class="text-red-500" id="err"></p>
+            </div>
+            <img id="uploadedImage" class="object-contain" style="display:none;">
+            <button id="dButton" style="display: none;" onclick="downloadImage()" class="mt-4 mb-9 text-lg flex justify-center items-center gap-2 px-4 py-2 w-full rounded-md bg-blue-500 text-white cursor-pointer">Download</button>
+
+        </div>
+
+        <div class="flex flex-col gap-2 items-center justify-center w-full ">
+            <h1 class="font-semibold text-xl">Oringinal</h1>
+
+                <img id="previewImage" class="object-contain " style="display: none;" alt="Uploaded Image">
             
 
             <div id="imageHolder" class="w-full" style="display: block;">
@@ -35,30 +69,99 @@
                     <input id="dropzone-file" type="file" class="hidden" required/>
                 </label>
             </div>
-        </div>
 
-        <div class=" flex flex-col justify-center items-center border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-            <div id="resultHolder" style="display: flex;" class="flex flex-col items-center justify-center pt-5 pb-6">
-                <span class="text-gray-500 dark:text-gray-400 p-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
-                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
-                  </svg>
-                </span>
-                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">The image will be displayed here.</p>
+            <div class="w-full flex flex-col items-center mt-4 gap-4 ">
+                <textarea rows="3" placeholder="Enter your Prompt.." id="messageInput" class="resize-none w-full px-4 py-2 focus:outline-none ring-gray-300 ring-2 rounded-md" required></textarea>
+                <button onclick="uploadData()" class="text-lg flex justify-center items-center gap-2 px-4 py-2 w-full rounded-md bg-blue-500 text-white cursor-pointer"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stars" viewBox="0 0 16 16">
+                    <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+                  </svg></span>Generete
+                  <div id="spinner" style="display: none;" role="status">
+                    <svg aria-hidden="true" class="w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                    </svg>
+                    <span class="sr-only">Loading...</span>
+                </div>
+                
+                </button>
+                <p class="text-sm"> <span class="font-semibold">Privacy:</span> Your images are NEVER stored on servers.</p>
             </div>
-            <img id="uploadedImage" class="h-[500px] aspect-square object-contain" style="display:none;">
         </div>
 
+       
+
     </div>
 
-    <div class="w-full mt-4 flex gap-2">
-        <input type="text" id="messageInput" placeholder="Enter your message"
-            class="w-full px-4 py-2 focus:outline-none ring-gray-300 ring-1 rounded-xl" required><br><br>
-        <button onclick="uploadData()" class="px-4 py-2 rounded-lg bg-blue-500 text-white cursor-pointer">Generete</button>
+    <hr class="my-12 text-gray-300">
+
+    <div id="discover" class="">
+        <h2 class="text-4xl font-semibold">Discover More Image Generators</h2>
+        <div id="cardContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6"></div>
     </div>
+
+</section>
+    
+
+<footer class="bg-white rounded-lg shadow-sm m-4 dark:bg-gray-800">
+    <div class="w-full mx-auto max-w-screen-xl p-4 flex items-center justify-center">
+      <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="https://flowbite.com/" class="hover:underline">Image Generator.</a>
+    
+    </div>
+</footer>
+
 
     <script>
+
+        function downloadImage() {
+            const url_path = document.getElementById("uploadedImage").src
+            const link = document.createElement("a");
+            link.href = url_path;
+            link.download = "downloaded_image.png"; // File name for download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+const jsonData = [
+            { "title": "Add GF", "description": "add a girl stands next to the guy in the picture" },
+            { "title": "Add BF", "description": "add a boy stands next to the girl in the picture"},
+            { "title": "Add Beard", "description": "add a beard to the guy in the picture" }
+        ];
+
+        // Select the container
+        const cardContainer = document.getElementById("cardContainer");
+
+        // Function to generate cards
+        function renderCards(data) {
+            cardContainer.innerHTML = ""; // Clear existing content
+            data.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "bg-white shadow-md border-gray-300 border-2 p-6 rounded-md";
+                card.innerHTML = `
+                   <div class="cursor-pointer" onClick="applyPrompt('${item.description}')">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-xl font-semibold mt-2">${item.title}</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0z"/>
+</svg></div>
+                    <p class="text-gray-600">${item.description}</p>
+                
+                    </div>
+                   
+                `;
+                
+                cardContainer.appendChild(card);
+            });
+        }
+
+        function applyPrompt(prompt)
+        {
+            document.getElementById("messageInput").value = prompt
+            document.getElementById("imageHolder").scrollIntoView({ behavior: "smooth" });
+        }
+
+        // Render the cards
+        renderCards(jsonData);
 
 
         document.getElementById("dropzone-file").addEventListener("change", function (event) {
@@ -83,7 +186,8 @@
             let formData = new FormData();
             let message = document.getElementById("messageInput").value;
             let imageFile = document.getElementById("dropzone-file").files[0];
-
+            const spinnerWidget = document.getElementById('spinner')
+            spinnerWidget.style.display = "block";
             if(imageFile && message !='')
             {
             formData.append("message", message);
@@ -98,9 +202,18 @@
                     if (data.image_url) {
                         let imgElement = document.getElementById("uploadedImage");
                         let resHolder = document.getElementById("resultHolder");
+                        let dButton = document.getElementById("dButton");
                         imgElement.src = `data:image/png;base64,${data.image_url}`;
                         resHolder.style.display = "none";
                         imgElement.style.display = "block";
+                        dButton.style.display = "block";
+                        spinnerWidget.style.display = "none";
+
+                    }
+                    else{
+                        document.getElementById("err").innerText = "Something Wrong!, Try again."
+                        spinnerWidget.style.display = "none";
+
                     }
                 })
                 .catch(error => console.error("Error:", error));
